@@ -1,23 +1,19 @@
-import { Prisma } from "@prisma/client";
-import { NextFunction, Request, Response } from "express";
-import httpStatus from "http-status";
-import { ZodError } from "zod";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Prisma } from '@prisma/client';
+import { Request, Response } from 'express';
+import httpStatus from 'http-status';
+import { ZodError } from 'zod';
 
-import config from "../config";
-import ApiError from "../../Error/ApiErrors";
-import handleValidationError from "../../Error/handleValidationError";
-import handleZodError from "../../Error/handleZodError";
-import handleClientError from "../../Error/handleClientError";
-import { IGenericErrorMessage } from "../../Interface/error";
+import config from '../config';
+import ApiError from '../../Error/ApiErrors';
+import handleValidationError from '../../Error/handleValidationError';
+import handleZodError from '../../Error/handleZodError';
+import handleClientError from '../../Error/handleClientError';
+import { IGenericErrorMessage } from '../../Interface/error';
 
-const GlobalErrorHandler = (
-  error: any,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const GlobalErrorHandler = (error: any, req: Request, res: Response) => {
   let statusCode: any = httpStatus.INTERNAL_SERVER_ERROR;
-  let message = error.message || "Something went wrong!";
+  let message = error.message || 'Something went wrong!';
   let errorMessages: IGenericErrorMessage[] = [];
 
   // handle prisma client validation errors
@@ -51,20 +47,20 @@ const GlobalErrorHandler = (
     errorMessages = error?.message
       ? [
           {
-            path: "",
+            path: '',
             message: error?.message,
           },
         ]
       : [];
-  } 
-  
+  }
+
   // Handle Errors
   else if (error instanceof Error) {
     message = error?.message;
     errorMessages = error?.message
       ? [
           {
-            path: "",
+            path: '',
             message: error?.message,
           },
         ]
@@ -75,11 +71,11 @@ const GlobalErrorHandler = (
   else if (error instanceof Prisma.PrismaClientInitializationError) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message =
-      "Failed to initialize Prisma Client. Check your database connection or Prisma configuration.";
+      'Failed to initialize Prisma Client. Check your database connection or Prisma configuration.';
     errorMessages = [
       {
-        path: "",
-        message: "Failed to initialize Prisma Client.",
+        path: '',
+        message: 'Failed to initialize Prisma Client.',
       },
     ];
   }
@@ -88,11 +84,11 @@ const GlobalErrorHandler = (
   else if (error instanceof Prisma.PrismaClientRustPanicError) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
     message =
-      "A critical error occurred in the Prisma engine. Please try again later.";
+      'A critical error occurred in the Prisma engine. Please try again later.';
     errorMessages = [
       {
-        path: "",
-        message: "Prisma Client Rust Panic Error",
+        path: '',
+        message: 'Prisma Client Rust Panic Error',
       },
     ];
   }
@@ -100,11 +96,11 @@ const GlobalErrorHandler = (
   // Prisma Client Unknown Request Error
   else if (error instanceof Prisma.PrismaClientUnknownRequestError) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
-    message = "An unknown error occurred while processing the request.";
+    message = 'An unknown error occurred while processing the request.';
     errorMessages = [
       {
-        path: "",
-        message: "Prisma Client Unknown Request Error",
+        path: '',
+        message: 'Prisma Client Unknown Request Error',
       },
     ];
   }
@@ -112,39 +108,39 @@ const GlobalErrorHandler = (
   // Generic Error Handling (e.g., JavaScript Errors)
   else if (error instanceof SyntaxError) {
     statusCode = httpStatus.BAD_REQUEST;
-    message = "Syntax error in the request. Please verify your input.";
+    message = 'Syntax error in the request. Please verify your input.';
     errorMessages = [
       {
-        path: "",
-        message: "Syntax Error",
+        path: '',
+        message: 'Syntax Error',
       },
     ];
   } else if (error instanceof TypeError) {
     statusCode = httpStatus.BAD_REQUEST;
-    message = "Type error in the application. Please verify your input.";
+    message = 'Type error in the application. Please verify your input.';
     errorMessages = [
       {
-        path: "",
-        message: "Type Error",
+        path: '',
+        message: 'Type Error',
       },
     ];
   } else if (error instanceof ReferenceError) {
     statusCode = httpStatus.BAD_REQUEST;
-    message = "Reference error in the application. Please verify your input.";
+    message = 'Reference error in the application. Please verify your input.';
     errorMessages = [
       {
-        path: "",
-        message: "Reference Error",
+        path: '',
+        message: 'Reference Error',
       },
     ];
   }
   // Catch any other error type
   else {
-    message = "An unexpected error occurred!";
+    message = 'An unexpected error occurred!';
     errorMessages = [
       {
-        path: "",
-        message: "An unexpected error occurred!",
+        path: '',
+        message: 'An unexpected error occurred!',
       },
     ];
   }
@@ -154,7 +150,7 @@ const GlobalErrorHandler = (
     message,
     errorMessages,
     err: error,
-    stack: config.env !== "production" ? error?.stack : undefined,
+    stack: config.env !== 'production' ? error?.stack : undefined,
   });
 };
 
