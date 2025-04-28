@@ -15,7 +15,7 @@ router.get('/:id', BookController.getSingleBookFromDB);
 router.post('/', BookController.createBookIntoDB);
 
 // update book
-router.patch(
+router.put(
   '/:id',
   validateRequest(BookValidation.updateBook),
   BookController.updateBookIntoDB,
