@@ -3,7 +3,7 @@ import catchAsync from '../../../Shared/catchAsync';
 import sendResponse from '../../../Shared/sendResponse';
 import { BookService } from './book.service';
 import { pick } from '../../../Shared/pick';
-import { filterField } from './book.constant';
+import { filterField, paginationField } from './book.constant';
 
 // create book
 const createBookIntoDB = catchAsync(async (req, res) => {
@@ -22,9 +22,9 @@ const createBookIntoDB = catchAsync(async (req, res) => {
 // get all books (with query params)
 const getAllBooksFromDB = catchAsync(async (req, res) => {
   const filter = pick(req.query, filterField);
-  // const options = pick(req.query, paginationField);
+  const options = pick(req.query, paginationField);
 
-  const result = await BookService.getAllBooksFromDB(filter, );
+  const result = await BookService.getAllBooksFromDB(filter, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

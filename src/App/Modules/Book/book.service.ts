@@ -3,8 +3,9 @@ import httpStatus from 'http-status';
 import { Book, Prisma } from '@prisma/client';
 import prisma from '../../../Shared/prisma';
 import ApiError from '../../../Error/ApiErrors';
-import { IFilterRequest } from './book.interface';
+import { IFilterRequest, IPaginationOptions, IPaginationResult } from './book.interface';
 import { searchableFields } from './book.constant';
+import { calculatedPagination } from '../../../Helpers/calculatePagination';
 
 // create book
 const createBookIntoDB = async (payload: Book): Promise<Book> => {
@@ -23,14 +24,18 @@ const createBookIntoDB = async (payload: Book): Promise<Book> => {
 
 // get all books (with query params) and  retrieve a list of book written by a specific author
 const getAllBooksFromDB = async (
-  params: IFilterRequest /**options:IPaginationOptions */,
-): Promise<Book[]> => {
+  params: IFilterRequest,
+  options: IPaginationOptions,
+): Promise<IPaginationResult<Book[]>> => {
+  const { limit, page, skip, sortBy, sortOrder } =
+    calculatedPagination(options);
+
   const { searchTerm, ...filterData } = params;
 
   const filters: Prisma.BookWhereInput[] = [];
 
-  // searching
-  if (params?.searchTerm) {
+  // searching (text fields only)
+  if (searchTerm) {
     filters.push({
       OR: searchableFields.map((field) => ({
         [field]: {
@@ -43,11 +48,21 @@ const getAllBooksFromDB = async (
 
   if (Object.keys(filterData).length > 0) {
     filters.push({
-      AND: Object.keys(filterData).map((key) => ({
-        [key]: {
-          equals: (filterData as any)[key],
-        },
-      })),
+      AND: Object.keys(filterData).map((key) => {
+        if (key === 'authorId') {
+          return {
+            [key]: {
+              equals: Number(filterData[key as keyof typeof filterData]),
+            },
+          };
+        }
+        return {
+          [key]: {
+            contains: filterData[key as keyof typeof filterData],
+            mode: 'insensitive',
+          },
+        };
+      }),
     });
   }
 
@@ -55,12 +70,33 @@ const getAllBooksFromDB = async (
 
   const result = await prisma.book.findMany({
     where,
+    skip,
+    take: limit,
+    orderBy:
+      sortBy && sortOrder
+        ? {
+            [sortBy]: sortOrder,
+          }
+        : {
+            createdAt: 'desc',
+          },
     include: {
       author: true,
     },
   });
 
-  return result;
+  const total = await prisma.book.count({
+    where,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
 };
 
 // get single book by id
