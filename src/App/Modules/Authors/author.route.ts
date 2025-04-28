@@ -12,7 +12,11 @@ router.get('/', AuthorController.getAllAuthorsFromDB);
 router.get('/:id', AuthorController.getSingleAuthorFromDB);
 
 // create author
-router.post('/', AuthorController.createAuthorIntoDB);
+router.post(
+  '/',
+  validateRequest(AuthorValidation.createAuthor),
+  AuthorController.createAuthorIntoDB,
+);
 
 // update author by id
 router.put(
