@@ -1,7 +1,14 @@
 import httpStatus from 'http-status';
-import { Author } from '@prisma/client';
+import { Author, Prisma } from '@prisma/client';
 import prisma from '../../../Shared/prisma';
 import ApiError from '../../../Error/ApiErrors';
+import {
+  IFilterRequest,
+  IPaginationOptions,
+  IPaginationResult,
+} from './author.interface';
+import { calculatedPagination } from '../../../Helpers/calculatePagination';
+import { searchableFields } from './author.constant';
 
 const createAuthorIntoDB = async (payload: Author): Promise<Author> => {
   const result = await prisma.author.create({
@@ -18,14 +25,50 @@ const createAuthorIntoDB = async (payload: Author): Promise<Author> => {
 };
 
 // get all authors
-const getAllAuthorsFromDB = async (): Promise<Author[]> => {
+const getAllAuthorsFromDB = async (
+  params: IFilterRequest,
+  options: IPaginationOptions,
+): Promise<IPaginationResult<Author[]>> => {
+  const { limit, page, skip, sortBy, sortOrder } =
+    calculatedPagination(options);
+
+  const filters: Prisma.AuthorWhereInput[] = [];
+
+  // searching (text fields only)
+  if (params?.searchTerm) {
+    filters.push({
+      OR: searchableFields.map((field) => ({
+        [field]: {
+          contains: params.searchTerm,
+          mode: 'insensitive',
+        },
+      })),
+    });
+  }
+
   const result = await prisma.author.findMany({
+    skip,
+    take: limit,
+    orderBy:
+      sortBy && sortOrder
+        ? {
+            [sortBy]: sortOrder,
+          }
+        : {
+            createdAt: 'desc',
+          },
     include: {
       books: true,
     },
   });
 
-  return result;
+  return {
+    meta: {
+      page,
+      limit,
+    },
+    data: result,
+  };
 };
 
 // get single author by id

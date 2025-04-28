@@ -2,6 +2,8 @@ import httpStatus  from 'http-status';
 import catchAsync from '../../../Shared/catchAsync';
 import sendResponse from '../../../Shared/sendResponse';
 import { AuthorService } from './author.service';
+import { pick } from '../../../Shared/pick';
+import { filterField, paginationField } from './author.constant';
 
 // create author into DB
 const createAuthorIntoDB = catchAsync(async (req, res) => {
@@ -19,7 +21,9 @@ const createAuthorIntoDB = catchAsync(async (req, res) => {
 
 // get all authors
 const getAllAuthorsFromDB = catchAsync(async (req, res) => {
-  const result = await AuthorService.getAllAuthorsFromDB();
+  const filter = pick(req.query, filterField);
+    const options = pick(req.query, paginationField);
+  const result = await AuthorService.getAllAuthorsFromDB(filter, options);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
