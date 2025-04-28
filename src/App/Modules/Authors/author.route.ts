@@ -15,7 +15,7 @@ router.get('/:id', AuthorController.getSingleAuthorFromDB);
 router.post('/', AuthorController.createAuthorIntoDB);
 
 // update author by id
-router.patch(
+router.put(
   '/:id',
   validateRequest(AuthorValidation.updateAuthor),
   AuthorController.updateAuthorIntoDB,
