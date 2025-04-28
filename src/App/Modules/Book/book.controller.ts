@@ -2,6 +2,8 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../Shared/catchAsync';
 import sendResponse from '../../../Shared/sendResponse';
 import { BookService } from './book.service';
+import { pick } from '../../../Shared/pick';
+import { filterField } from './book.constant';
 
 // create book
 const createBookIntoDB = catchAsync(async (req, res) => {
@@ -17,9 +19,12 @@ const createBookIntoDB = catchAsync(async (req, res) => {
   });
 });
 
-// get all books
+// get all books (with query params)
 const getAllBooksFromDB = catchAsync(async (req, res) => {
-  const result = await BookService.getAllBooksFromDB();
+  const filter = pick(req.query, filterField);
+  // const options = pick(req.query, paginationField);
+
+  const result = await BookService.getAllBooksFromDB(filter, );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -73,9 +78,9 @@ const deleteBookFromDB = catchAsync(async (req, res) => {
 });
 
 export const BookController = {
-    createBookIntoDB,
-    getAllBooksFromDB,
-    getSingleBookFromDB,
-    updateBookIntoDB,
-    deleteBookFromDB,
-}
+  createBookIntoDB,
+  getAllBooksFromDB,
+  getSingleBookFromDB,
+  updateBookIntoDB,
+  deleteBookFromDB,
+};

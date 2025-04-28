@@ -5,7 +5,7 @@ import { BookValidation } from './book.zod';
 
 const router = express.Router();
 
-// get all books
+// get all books (with query params)
 router.get('/', BookController.getAllBooksFromDB);
 
 // get single book
@@ -27,5 +27,10 @@ router.put(
 
 // delete book
 router.delete('/:id', BookController.deleteBookFromDB);
+
+
+
+//------------Query Parameters------------//
+// router.get('/query', BookController.getAllBooksFromDB);
 
 export const bookRoute = router;
