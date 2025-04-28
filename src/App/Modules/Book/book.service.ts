@@ -75,7 +75,7 @@ const updateBookIntoDB = async (
 };
 
 // delete book by id
-const deleteBookFromDB = async (id: number): Promise<Book> => {
+const deleteBookFromDB = async (id: number): Promise<void> => {
   const book = await prisma.book.findUnique({
     where: {
       id,
