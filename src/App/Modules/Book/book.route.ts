@@ -12,7 +12,11 @@ router.get('/', BookController.getAllBooksFromDB);
 router.get('/:id', BookController.getSingleBookFromDB);
 
 // create book
-router.post('/', BookController.createBookIntoDB);
+router.post(
+  '/',
+  validateRequest(BookValidation.createBookZodSchema),
+  BookController.createBookIntoDB,
+);
 
 // update book
 router.put(
