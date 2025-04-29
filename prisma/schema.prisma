@@ -7,33 +7,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ------------------------------
+//            ENUM
+// ------------------------------
 
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  AUTHOR
+}
 
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  DELETED
+}
+
+// ------------------------------
+//            MODEL
+// ------------------------------
+
+model User {
+  id       Int        @id @default(autoincrement())
+  username String     @unique
+  email    String     @unique
+  password String
+  role     UserRole   @default(AUTHOR)
+  status   UserStatus @default(ACTIVE)
+  author   Author?    @relation(fields: [authorId], references: [id])
+  authorId Int?       @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 model Author {
-  id         Int      @id @default(autoincrement())
-  name       String
-  bio        String?   // optional
-  birthdate  DateTime
-  books      Book[]    // One author has many books
+  id        Int      @id @default(autoincrement())
+  name      String
+  bio       String? // optional
+  birthdate DateTime
+  books     Book[] // One author has many books
+  user      User? // One-to-one relation with user
 
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@map("authors") 
+  @@map("authors")
 }
 
 model Book {
   id             Int      @id @default(autoincrement())
   title          String
-  description    String? 
+  description    String?
   published_date DateTime
   author         Author   @relation(fields: [authorId], references: [id])
   authorId       Int
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("books")
 }
-
