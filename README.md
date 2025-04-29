@@ -10,7 +10,7 @@ The Bookstore API is a RESTful backend service designed to manage books and auth
 
 ## 🔗 Postman documentation
 
-[https://documenter.getpostman.com/view/40219022/2sB2izDtWk](https://documenter.getpostman.com/view/40219022/2sB2izDtWk)
+[https://documenter.getpostman.com/view/40219022/2sB2j3AWvL](https://documenter.getpostman.com/view/40219022/2sB2j3AWvL)
 
 ---
 
@@ -24,6 +24,7 @@ The Bookstore API is a RESTful backend service designed to manage books and auth
 - **UUID** – For unique entity identifiers
 - **dotenv** – Environment configuration
 - **cors**, – Middleware for security and logging
+
 
 ---
 

@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 // Route handler for the root endpoint
 app.get('/', (req: Request, res: Response) => {
   res.send({
-    message: 'Welcome to the API!',
+    message: 'Welcome to Book Store API!',
   });
 });
 
