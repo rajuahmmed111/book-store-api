@@ -6,7 +6,7 @@ The Bookstore API is a RESTful backend service designed to manage books and auth
 
 ## 🔗 Live URL
 
-[https://assignment-sql-8.vercel.app/](https://assignment-sql-8.vercel.app/)
+[https://bookstore-api-phi.vercel.app/](https://bookstore-api-phi.vercel.app/)
 
 ## 🔗 Postman documentation
 
@@ -14,16 +14,54 @@ The Bookstore API is a RESTful backend service designed to manage books and auth
 
 ---
 
-## 🛠️ Technology Stack & Packages
+🛠️ Technology Stack
+🔧 Backend Runtime & Language
+Node.js – JavaScript runtime for building the server
 
-- **Node.js** – Runtime environment
-- **Express.js** – Web framework
-- **TypeScript** – Type-safe JavaScript
-- **PostgreSQL** – Relational database
-- **Prisma ORM** – Database management
-- **UUID** – For unique entity identifiers
-- **dotenv** – Environment configuration
-- **cors**, – Middleware for security and logging
+TypeScript – Strongly typed superset of JavaScript for safer development
+
+🌐 Web Framework
+Express.js – Lightweight and flexible Node.js web framework
+
+🗄️ Database & ORM
+PostgreSQL – Relational database management system
+
+Prisma ORM – Type-safe and auto-generated query builder for PostgreSQL
+
+🔐 Authentication & Security
+jsonwebtoken – Handling JWT-based authentication
+
+bcrypt – Password hashing
+
+cors – Cross-Origin Resource Sharing for secure API requests
+
+dotenv – Load environment variables securely from .env file
+
+📬 Email
+nodemailer – For sending emails (e.g., password reset, verification)
+
+📦 Validation & Parsing
+zod – Schema validation and parsing
+
+🔧 Development Tools
+ts-node-dev – Run TypeScript directly with automatic restarts
+
+tsx – Fast TypeScript runtime and dev tool
+
+eslint + prettier – Linting and code formatting
+
+@types/ packages – Type definitions for TypeScript compatibility
+
+📦 Notable NPM Packages
+
+Category	Packages
+Core	express, typescript, ts-node-dev, dotenv
+Database	@prisma/client, prisma, PostgreSQL (driver implicit via Prisma)
+Auth & Security	bcrypt, jsonwebtoken, cors
+Validation	zod
+Mailing	nodemailer
+Type Definitions	@types/* packages for node, express, cors, jsonwebtoken, etc.
+Tooling	eslint, prettier, tsx, typescript-eslint
 
 
 ---
